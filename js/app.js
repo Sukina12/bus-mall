@@ -36,7 +36,7 @@ let middleIndex;
 let rightIndex;
 
 let voteNum = 0;
-let totalNum = 25;
+let totalNum = 26;
 
 // Constructor Function
 function Products (name){
