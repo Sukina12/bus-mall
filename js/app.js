@@ -35,8 +35,8 @@ let leftIndex;
 let middleIndex;
 let rightIndex;
 
-let voteNum = 0;
-let totalNum = 26;
+let voteNum = 1;
+let totalNum = 25;
 
 // Constructor Function
 function Products (name){
@@ -88,8 +88,9 @@ function render (){
 
 imageSection.addEventListener('click',handelClick);
 function handelClick (event){
-  if (voteNum < totalNum){
-    if (event.target.id !== 'image-section'){
+  if (event.target.id !== 'image-section'){
+    if (voteNum < totalNum){
+      voteNum++;
       if (event.target.id === leftImage.id){
         Products.all[leftIndex].votes++;
       }
@@ -99,13 +100,13 @@ function handelClick (event){
       else {
         Products.all[rightIndex].votes++;
       }
+      render();
     }
-    voteNum++;
-    render();
-  }
-  else {
-    resultButton.classList.remove ('hide');
-    resultButton.addEventListener('click',resultFunction);
+    else {
+    // resultButton.classList.remove ('hide');
+      imageSection.removeEventListener('click', handelClick);
+      resultButton.addEventListener('click',resultFunction);
+    }
   }
 }
 
