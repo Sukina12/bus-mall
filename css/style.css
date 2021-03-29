@@ -1,5 +1,6 @@
 body {
-    background-color: rgb(61, 148, 61);
+    background-color: rgb(211, 218, 211);
+    text-align: center;
 }
 h1 {
     font-size: 60px;
@@ -11,29 +12,31 @@ h1 {
 header nav ul {
     list-style: none;
   }
-header nav ul li {
+header nav ul li a{
     display: inline-block;
     padding: 10px;
     padding-left: 30px;
     padding-right: 30px;
     text-align: center;
+    color: rgb(38, 116, 38);
   }
   
   #images-section {
-    max-width: 90%;
+    max-width: 70%;
     margin: 0 auto;
     text-align: center;
    
   }
   img {
     width: 300px;
-    height: 400px;
+    height: 300px;
     border: 1px solid #00000057;
-    box-shadow: 3px 3px 6px #0000006b;
-    padding: 20px;
-    margin: 30px;
-    border-radius: 5px;
+    box-shadow: 1px 1px 1px #0000006b;
+    padding: 25px;
+    margin: 20px;
+    border-radius: 1px;
     background-color: rgb(101, 145, 101);
+
   }
 
 h2{
@@ -57,8 +60,8 @@ h3{
     background-color: rgb(23, 61, 23);
 }
 #buttonRe{
-    background-color: rgb(5, 78, 5);
-   width:80px;
+    background-color: rgb(62, 129, 62);
+   width:90px;
 }
 #result-section{
     clear: both;

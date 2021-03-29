@@ -34,7 +34,11 @@ const resultButton = document.getElementById('buttonRe');
 let leftIndex;
 let middleIndex;
 let rightIndex;
-
+let leftTempIndex;
+let middleTempIndex;
+let rightTempIndex;
+let votes=[];
+let shows=[];
 let voteNum = 1;
 let totalNum = 25;
 
@@ -46,7 +50,6 @@ function Products (name){
   this.shownTimes=0;
   Products.all.push(this);
 }
-
 Products.all=[];
 
 // Build Objects
@@ -65,27 +68,32 @@ function render (){
   leftIndex = randomNumber (0,Products.all.length-1);
   middleIndex = randomNumber (0,Products.all.length-1);
   rightIndex = randomNumber (0,Products.all.length-1);
-
-  while (rightIndex === leftIndex || rightIndex === middleIndex || leftIndex === middleIndex){
-    leftIndex = randomNumber (0,Products.all.length-1);
-    middleIndex = randomNumber (0,Products.all.length-1);
-    rightIndex = randomNumber (0,Products.all.length-1);
+  if (rightIndex === leftIndex || rightIndex === middleIndex || leftIndex === middleIndex ||
+     leftTempIndex=== leftIndex || leftTempIndex === middleIndex || leftTempIndex=== rightIndex ||
+     middleTempIndex=== leftIndex || middleTempIndex === middleIndex || middleTempIndex === rightIndex ||
+     rightTempIndex=== leftIndex || rightTempIndex === middleIndex || rightTempIndex === rightIndex){
+    render();
   }
-  leftImage.src=Products.all[leftIndex].path;
-  leftImage.alt=Products.all[leftIndex].name;
-  leftImage.title=Products.all[leftIndex].name;
-  Products.all[leftIndex].shownTimes++;
-  middleImage.src=Products.all[middleIndex].path;
-  middleImage.alt=Products.all[middleIndex].name;
-  middleImage.title=Products.all[middleIndex].name;
-  Products.all[middleIndex].shownTimes++;
-  rightImage.src=Products.all[rightIndex].path;
-  rightImage.alt=Products.all[rightIndex].name;
-  rightImage.title=Products.all[rightIndex].name;
-  Products.all[rightIndex].shownTimes++;
+  else {
+    leftImage.src=Products.all[leftIndex].path;
+    leftImage.alt=Products.all[leftIndex].name;
+    leftImage.title=Products.all[leftIndex].name;
+    Products.all[leftIndex].shownTimes++;
+    middleImage.src=Products.all[middleIndex].path;
+    middleImage.alt=Products.all[middleIndex].name;
+    middleImage.title=Products.all[middleIndex].name;
+    Products.all[middleIndex].shownTimes++;
+    rightImage.src=Products.all[rightIndex].path;
+    rightImage.alt=Products.all[rightIndex].name;
+    rightImage.title=Products.all[rightIndex].name;
+    Products.all[rightIndex].shownTimes++;
+    leftTempIndex =leftIndex;
+    middleTempIndex = middleIndex;
+    rightTempIndex = rightIndex;
+  }
 }
 
-
+// Event Function
 imageSection.addEventListener('click',handelClick);
 function handelClick (event){
   if (event.target.id !== 'image-section'){
@@ -103,7 +111,15 @@ function handelClick (event){
       render();
     }
     else {
-    // resultButton.classList.remove ('hide');
+      if (event.target.id === leftImage.id){
+        Products.all[leftIndex].votes++;
+      }
+      else if (event.target.id === middleImage.id){
+        Products.all[middleIndex].votes++;
+      }
+      else {
+        Products.all[rightIndex].votes++;
+      }
       imageSection.removeEventListener('click', handelClick);
       resultButton.addEventListener('click',resultFunction);
     }
@@ -121,15 +137,44 @@ function resultFunction(){
   container.appendChild(ulEl);
   for (let y=0; y<Products.all.length; y++)
   {
+    votes.push(Products.all[y].votes);
+    shows.push(Products.all[y].shownTimes);
     const liEl = document.createElement('li');
     ulEl.appendChild(liEl);
     liEl.textContent =(`(${Products.all[y].name}) had (${Products.all[y].votes}) votes, and was seen (${Products.all[y].shownTimes}) times.`);
   }
-
+  chartRender();
 }
-
 render();
 
+// Chart Function
+function chartRender(){
+  let ctx = document.getElementById('myChart').getContext('2d');
+  let chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+
+    // The data for our dataset
+    data: {
+      labels: names,
+      datasets: [{
+        label: 'Votes',
+        backgroundColor: 'purple',
+        borderColor: 'rgb(255, 99, 132)',
+        data: votes
+      },
+      {
+        label: 'Shown Times',
+        backgroundColor: 'green',
+        borderColor: 'rgb(255, 99, 132)',
+        data: shows
+      }]
+    },
+
+    // Configuration options go here
+    options: {}
+  });
+}
 
 
 
