@@ -30,7 +30,7 @@ const leftImage = document.getElementById('left-image');
 const middleImage = document.getElementById('middle-image');
 const rightImage = document.getElementById('right-image');
 const imageSection = document.getElementById('image-section');
-const resultButton = document.getElementById('buttonRe');
+// const resultButton = document.getElementById('buttonRe');
 let leftIndex;
 let middleIndex;
 let rightIndex;
@@ -39,6 +39,7 @@ let votes=[];
 let shows=[];
 let voteNum = 1;
 let totalNum = 25;
+
 
 // Constructor Function
 function Products (name){
@@ -49,6 +50,25 @@ function Products (name){
   Products.all.push(this);
 }
 Products.all=[];
+
+function settingItem(){
+  let data= JSON.stringify(Products.all);
+  localStorage.setItem('products',data);
+}
+
+
+function gettingItem(){
+  let stringObj = localStorage.getItem('products');
+  let normalObj = JSON.parse (stringObj);
+  if (normalObj !== null)
+  {
+    Products.all = normalObj;
+  }
+  resultFunction();
+  chartRender();
+  render();
+}
+
 
 // Build Objects
 for (let i=0; i<names.length; i++){
@@ -90,13 +110,14 @@ function render (){
       rightImage.alt=Products.all[rightIndex].name;
       rightImage.title=Products.all[rightIndex].name;
       Products.all[rightIndex].shownTimes++;
+      settingItem();
     }
   }
 }
-
 // Event Function
 imageSection.addEventListener('click',handelClick);
 function handelClick (event){
+  event.preventDefault();
   if (event.target.id !== 'image-section'){
     if (voteNum < totalNum){
       voteNum++;
@@ -122,20 +143,25 @@ function handelClick (event){
         Products.all[rightIndex].votes++;
       }
       imageSection.removeEventListener('click', handelClick);
-      resultButton.addEventListener('click',resultFunction);
+      // resultButton.addEventListener('click',resultFunction);
+      settingItem();
+      gettingItem();
     }
   }
 }
 render();
-// Button Part
+
+// resultButton.addEventListener('click',resultFunction);
+// // Button Part
 const container=document.getElementById('result-section');
 function resultFunction(){
   const h3El=document.createElement('h3');
   container.appendChild(h3El);
   h3El.textContent =('Products Result');
-
+  h3El.id = 'product-List-h3';
   const ulEl=document.createElement('ul');
   container.appendChild(ulEl);
+  ulEl.id = 'product-List-ul';
   for (let y=0; y<Products.all.length; y++)
   {
     votes.push(Products.all[y].votes);
@@ -144,7 +170,6 @@ function resultFunction(){
     ulEl.appendChild(liEl);
     liEl.textContent =(`(${Products.all[y].name}) had (${Products.all[y].votes}) votes, and was seen (${Products.all[y].shownTimes}) times.`);
   }
-  chartRender();
 }
 
 
@@ -176,7 +201,6 @@ function chartRender(){
     options: {}
   });
 }
-
 
 
 
