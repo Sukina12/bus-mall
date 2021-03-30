@@ -40,6 +40,7 @@ let shows=[];
 let voteNum = 1;
 let totalNum = 25;
 
+
 // Constructor Function
 function Products (name){
   this.name = name;
@@ -47,8 +48,28 @@ function Products (name){
   this.votes = 0;
   this.shownTimes=0;
   Products.all.push(this);
+  settingItem();
 }
 Products.all=[];
+
+function settingItem(){
+  let data= JSON.stringify(Products.all);
+  localStorage.setItem('products',data);
+  localStorage.setItem('totalNum',totalNum);
+}
+
+
+function gettingItem(){
+  let stringObj = localStorage.getItem('products');
+  let normalObj = JSON.parse (stringObj);
+  if (normalObj !== null)
+  {
+    Products.all = normalObj;
+  }
+  resultFunction();
+  render();
+}
+
 
 // Build Objects
 for (let i=0; i<names.length; i++){
@@ -90,10 +111,11 @@ function render (){
       rightImage.alt=Products.all[rightIndex].name;
       rightImage.title=Products.all[rightIndex].name;
       Products.all[rightIndex].shownTimes++;
+      settingItem();
     }
   }
 }
-
+render();
 // Event Function
 imageSection.addEventListener('click',handelClick);
 function handelClick (event){
@@ -121,19 +143,19 @@ function handelClick (event){
       else {
         Products.all[rightIndex].votes++;
       }
+      settingItem();
       imageSection.removeEventListener('click', handelClick);
       resultButton.addEventListener('click',resultFunction);
     }
   }
 }
-render();
+
 // Button Part
 const container=document.getElementById('result-section');
 function resultFunction(){
   const h3El=document.createElement('h3');
   container.appendChild(h3El);
   h3El.textContent =('Products Result');
-
   const ulEl=document.createElement('ul');
   container.appendChild(ulEl);
   for (let y=0; y<Products.all.length; y++)
@@ -145,6 +167,7 @@ function resultFunction(){
     liEl.textContent =(`(${Products.all[y].name}) had (${Products.all[y].votes}) votes, and was seen (${Products.all[y].shownTimes}) times.`);
   }
   chartRender();
+  settingItem();
 }
 
 
@@ -178,6 +201,7 @@ function chartRender(){
 }
 
 
+gettingItem();
 
 
 
