@@ -201,13 +201,3 @@ function chartRender(){
     options: {}
   });
 }
-
-
-
-
-
-
-
-
-
-
