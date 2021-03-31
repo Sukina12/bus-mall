@@ -39,19 +39,22 @@ let votes=[];
 let shows=[];
 let rounds= 1;
 let totalRounds = 25;
+let restoreValue=null;
 
 // random function
 function randomNumber (min,max){
   return Math.floor(Math.random() * (max - min) ) + min;
 }
-
 // Constructor Function
 function Products (name){
   this.name = name;
   this.path = `./assets/${name}.jpg`;
   this.votes = 0;
   this.shownTimes=0;
-  Products.all.push(this);
+  gettingItem();
+  if(restoreValue == null){
+    Products.all.push(this);
+  }
 }
 Products.all=[];
 
@@ -69,13 +72,11 @@ function settingItem(){
 
 
 function gettingItem(){
-  let stringObj = localStorage.getItem('products');
-  let normalObj = JSON.parse (stringObj);
-  if (normalObj !== null)
-  {
+  restoreValue = localStorage.getItem('products');
+  let normalObj = JSON.parse (restoreValue);
+  if (restoreValue !== null){
     Products.all = normalObj;
   }
-  resultFunction();
 }
 
 
@@ -109,7 +110,6 @@ function render (){
       rightImage.alt=Products.all[rightIndex].name;
       rightImage.title=Products.all[rightIndex].name;
       Products.all[rightIndex].shownTimes++;
-      settingItem();
     }
   }
 }
@@ -145,7 +145,7 @@ function handelClick (event){
       settingItem();
       imageSection.removeEventListener('click', handelClick);
       resultButton.addEventListener('click',resultFunction);
-      gettingItem();
+      // gettingItem();
     }
   }
 }
@@ -166,6 +166,7 @@ function resultFunction(){
   {
     votes.push(Products.all[y].votes);
     shows.push(Products.all[y].shownTimes);
+    settingItem();
     const liEl = document.createElement('li');
     ulEl.appendChild(liEl);
     liEl.textContent =(`(${Products.all[y].name}) had (${Products.all[y].votes}) votes, and was seen (${Products.all[y].shownTimes}) times.`);
@@ -202,3 +203,4 @@ function chartRender(){
     options: {}
   });
 }
+gettingItem();
