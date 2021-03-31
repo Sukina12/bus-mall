@@ -30,16 +30,20 @@ const leftImage = document.getElementById('left-image');
 const middleImage = document.getElementById('middle-image');
 const rightImage = document.getElementById('right-image');
 const imageSection = document.getElementById('image-section');
-// const resultButton = document.getElementById('buttonRe');
+const resultButton = document.getElementById('buttonRe');
 let leftIndex;
 let middleIndex;
 let rightIndex;
 let temporaryIndex=[];
 let votes=[];
 let shows=[];
-let voteNum = 1;
-let totalNum = 25;
+let rounds= 1;
+let totalRounds = 25;
 
+// random function
+function randomNumber (min,max){
+  return Math.floor(Math.random() * (max - min) ) + min;
+}
 
 // Constructor Function
 function Products (name){
@@ -50,6 +54,13 @@ function Products (name){
   Products.all.push(this);
 }
 Products.all=[];
+
+// Build Objects
+for (let i=0; i<names.length; i++){
+  new Products (names[i]);
+}
+// console.table (Products.all);
+
 
 function settingItem(){
   let data= JSON.stringify(Products.all);
@@ -65,21 +76,9 @@ function gettingItem(){
     Products.all = normalObj;
   }
   resultFunction();
-  chartRender();
-  render();
 }
 
 
-// Build Objects
-for (let i=0; i<names.length; i++){
-  new Products (names[i]);
-}
-// console.table (Products.all);
-
-// random function
-function randomNumber (min,max){
-  return Math.floor(Math.random() * (max - min) ) + min;
-}
 
 // render function
 function render (){
@@ -114,13 +113,14 @@ function render (){
     }
   }
 }
+render();
 // Event Function
 imageSection.addEventListener('click',handelClick);
 function handelClick (event){
   event.preventDefault();
   if (event.target.id !== 'image-section'){
-    if (voteNum < totalNum){
-      voteNum++;
+    if (rounds < totalRounds){
+      rounds++;
       if (event.target.id === leftImage.id){
         Products.all[leftIndex].votes++;
       }
@@ -142,14 +142,14 @@ function handelClick (event){
       else {
         Products.all[rightIndex].votes++;
       }
-      imageSection.removeEventListener('click', handelClick);
-      // resultButton.addEventListener('click',resultFunction);
       settingItem();
+      imageSection.removeEventListener('click', handelClick);
+      resultButton.addEventListener('click',resultFunction);
       gettingItem();
     }
   }
 }
-render();
+
 
 // resultButton.addEventListener('click',resultFunction);
 // // Button Part
@@ -170,6 +170,7 @@ function resultFunction(){
     ulEl.appendChild(liEl);
     liEl.textContent =(`(${Products.all[y].name}) had (${Products.all[y].votes}) votes, and was seen (${Products.all[y].shownTimes}) times.`);
   }
+  chartRender();
 }
 
 
@@ -201,8 +202,6 @@ function chartRender(){
     options: {}
   });
 }
-
-
 
 
 
