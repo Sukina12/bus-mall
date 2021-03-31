@@ -202,5 +202,3 @@ function chartRender(){
     options: {}
   });
 }
-
-
